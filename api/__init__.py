@@ -1,6 +1,7 @@
 import os
 from flask import Flask, render_template
 
+
 def create_app(test_config=None):
     app = Flask("notes_app")
     app.config.from_mapping(
@@ -14,6 +15,8 @@ def create_app(test_config=None):
         pass
     app.config['ENV'] = 'development'
     app.config['DEBUG'] = True
-   return app
 
-    
+    from . import db
+    db.init_app(app)
+
+    return app
