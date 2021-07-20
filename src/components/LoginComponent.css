@@ -1,0 +1,83 @@
+.login_page {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+	height: 100vh;
+	background: hsla(145, 84%, 73%, 1);
+
+	background: linear-gradient(
+		90deg,
+		hsla(145, 84%, 73%, 1) 0%,
+		hsla(150, 61%, 48%, 1) 100%
+	);
+
+	background: -moz-linear-gradient(
+		90deg,
+		hsla(145, 84%, 73%, 1) 0%,
+		hsla(150, 61%, 48%, 1) 100%
+	);
+
+	background: -webkit-linear-gradient(
+		90deg,
+		hsla(145, 84%, 73%, 1) 0%,
+		hsla(150, 61%, 48%, 1) 100%
+	);
+
+	filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#82F4B1", endColorstr="#30C67C", GradientType=1 );
+}
+.form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	align-content: center;
+	width: 20%;
+	min-width: 300px;
+	padding: 10px 5px 10px 5px;
+	border-radius: 2px;
+	background-color: white;
+	color: black;
+	box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+}
+.form:hover {
+	border-radius: 5px;
+	box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.form_header {
+	text-align: center;
+}
+.form_label {
+	font-size: small;
+	color: grey;
+}
+.form_input {
+	width: 20%;
+	min-width: 200px;
+	margin: 8px 0;
+	height: 25px;
+	padding: 2px 5px;
+	outline: none;
+	color: black;
+	border: 1px solid rgb(128, 128, 128, 0.3);
+	border-radius: 2px;
+	color: white;
+}
+.form_input:hover {
+	border: 1px solid rgb(2, 117, 216);
+}
+
+.form_link {
+	color: rgb(2, 117, 216);
+}
+.form_button {
+	width: 22%;
+	min-width: 208px;
+	margin: 5px 0;
+	height: 32px;
+	border: none;
+	border-radius: 5px;
+	background-color: rgb(92, 184, 92);
+	color: white;
+	outline: none;
+}
