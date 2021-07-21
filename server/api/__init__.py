@@ -1,9 +1,11 @@
 import os
 from flask import Flask, render_template
+from flask_cors import CORS
 
 
 def create_app(test_config=None):
     app = Flask("notes_app")
+    CORS(app)
     app.config.from_mapping(
         DATABASE=os.path.join(app.instance_path, 'notes_app.sqlite')
     )
@@ -18,5 +20,11 @@ def create_app(test_config=None):
 
     from . import db
     db.init_app(app)
+
+    from . import auth
+    app.register_blueprint(auth.bp)
+
+    from . import notes
+    app.register_blueprint(notes.bp)
 
     return app
