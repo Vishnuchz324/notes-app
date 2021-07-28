@@ -13,6 +13,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import { useEffect } from "react";
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import "./AddLabels.css";
 
 const styles = (theme) => ({
 	root: {
@@ -32,7 +34,7 @@ const useStyles = makeStyles({
 		textAlign: "center",
 	},
 	formInput: {
-		margin: "10px 0",
+		margin: "15px 0",
 	},
 });
 
@@ -67,28 +69,76 @@ const DialogActions = withStyles((theme) => ({
 	},
 }))(MuiDialogActions);
 
-export default function TransitionsModal({ open, handleClose }) {
+export default function AddLabels({ open, handleClose }) {
 	const classes = useStyles();
+	const [tags, setTags] = useState("");
 	const [title, setTitle] = useState("");
-	const [body, setBody] = useState("");
+	const [userID, setuserID] = useState(1);
+	const [render, setRender] = useState(false);
+
+	const getData = async () => {
+		console.log("visited");
+		await axios
+			.get(`http://127.0.0.1:5000/tags/${userID}/get_tags`)
+			.then(function (response) {
+				console.log(response.data);
+				setTags(response.data);
+			});
+	};
+
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		console.log(body.current);
 		await axios({
 			method: "POST",
 			headers: { "content-type": "application/json" },
-			url: "http://127.0.0.1:5000/notes/1/create",
+			url: `http://127.0.0.1:5000/tags/${userID}/create`,
 			data: {
-				title: title,
-				body: body,
+				tag: title,
 			},
 		})
 			.then((response) => {})
-			.catch((e) => console.log(e.response));
-		handleClose();
+			.catch((e) => {
+				console.log(e);
+			});
+		setRender(!render);
 	};
+
+	const handleDelete = async (tagID) => {
+		await axios
+			.get(`http://127.0.0.1:5000/tags/${userID}/delete/${tagID}`)
+			.then(function (response) {
+				console.log(response);
+			});
+		setRender(!render);
+	};
+
+	useEffect(async () => {
+		getData();
+	}, [open, render]);
+
+	const Tag = ({ tag, tagID }) => {
+		return (
+			<div className='tag'>
+				{tag}
+				<IconButton
+					style={{ marginRight: "10px" }}
+					aria-label='account of current user'
+					aria-controls='menu-appbar'
+					aria-haspopup='true'
+					color='inherit'
+					onClick={() => {
+						handleDelete(tagID);
+					}}
+				>
+					<HighlightOffIcon />
+				</IconButton>
+			</div>
+		);
+	};
+
 	return (
 		<Dialog
+			fullWidth
 			onClose={handleClose}
 			aria-labelledby='customized-dialog-title'
 			open={open}
@@ -98,9 +148,18 @@ export default function TransitionsModal({ open, handleClose }) {
 				id='customized-dialog-title'
 				onClose={handleClose}
 			>
-				Add Note
+				Add Label
 			</DialogTitle>
 			<DialogContent dividers>
+				{tags ? (
+					<div className='tags-container'>
+						{tags.map(([id, tag]) => {
+							return <Tag tag={tag} tagID={id} />;
+						})}
+					</div>
+				) : (
+					<div></div>
+				)}
 				<FormControl fullWidth className={classes.formInput} variant='outlined'>
 					<InputLabel required htmlFor='outlined-adornment-amount'>
 						Title
@@ -115,28 +174,16 @@ export default function TransitionsModal({ open, handleClose }) {
 						labelWidth={40}
 					/>
 				</FormControl>
-				<FormControl fullWidth className={classes.formInput} variant='outlined'>
-					<InputLabel htmlFor='outlined-adornment-amount'>Body</InputLabel>
-					<OutlinedInput
-						value={body}
-						onChange={(e) => {
-							setBody(e.target.value);
-						}}
-						multiline
-						rows='4'
-						id='outlined-adornment-amount'
-						labelWidth={40}
-					/>
-				</FormControl>
 			</DialogContent>
 			<DialogActions>
 				<Button
 					variant='contained'
 					autoFocus
+					name='tag'
 					onClick={handleSubmit}
 					color='primary'
 				>
-					Save changes
+					Create Tag
 				</Button>
 			</DialogActions>
 		</Dialog>

@@ -27,4 +27,7 @@ def create_app(test_config=None):
     from . import notes
     app.register_blueprint(notes.bp)
 
+    from . import tags
+    app.register_blueprint(tags.bp)
+
     return app

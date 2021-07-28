@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import NavBarComponent from "./NavBarComponent";
 import NotesComponent from "./NotesComponent";
-import TransitionsModal from "./TransitionsModal";
+import AddNotes from "./AddNotes";
+import AddLabels from "./AddLabels";
 import axios from "axios";
 
 function HomeComponent() {
-	const [open, setOpen] = useState(false);
+	const [openNotes, setOpenNotes] = useState(false);
+	const [openTags, setOpenTags] = useState(false);
 	const [notes, setNotes] = useState([]);
 	const [userID, setUserID] = useState(1);
-
 	const getData = async () => {
 		await axios
 			.get(`http://127.0.0.1:5000/notes/${userID}/get`)
@@ -21,6 +22,16 @@ function HomeComponent() {
 		console.table(search);
 	};
 
+	const handleOpen = (event) => {
+		const name = event.currentTarget.name;
+
+		if (name === "note") {
+			setOpenNotes(true);
+		} else if (name == "tag") {
+			setOpenTags(true);
+		}
+	};
+
 	const handleDelete = async (noteID, close) => {
 		await axios
 			.get(`http://127.0.0.1:5000/notes/${userID}/delete/${noteID}`)
@@ -31,27 +42,31 @@ function HomeComponent() {
 		close();
 	};
 
-	const handleOpen = () => {
-		setOpen(true);
-	};
-
-	useEffect(async () => {
+	useEffect(() => {
 		getData();
-	}, [open]);
+	}, [openNotes, openTags]);
 
-	const handleClose = () => {
-		setOpen(false);
-	};
 	return (
-		<div>
+		<>
 			<NavBarComponent handleOpen={handleOpen} handleSubmit={handleSubmit} />
 			<NotesComponent
 				notes={notes}
 				userID={userID}
 				handleDelete={handleDelete}
 			/>
-			<TransitionsModal open={open} handleClose={handleClose} />
-		</div>
+			<AddNotes
+				open={openNotes}
+				handleClose={() => {
+					setOpenNotes(false);
+				}}
+			/>
+			<AddLabels
+				open={openTags}
+				handleClose={() => {
+					setOpenTags(false);
+				}}
+			/>
+		</>
 	);
 }
 

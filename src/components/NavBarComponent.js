@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import InputBase from "@material-ui/core/InputBase";
 import { alpha, makeStyles } from "@material-ui/core/styles";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import FilterListIcon from "@material-ui/icons/FilterList";
+import LabelIcon from "@material-ui/icons/Label";
 import SearchIcon from "@material-ui/icons/Search";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { useState } from "react";
@@ -28,9 +28,21 @@ export default function NavBarComponent({ handleOpen, handleSubmit }) {
 							aria-controls='menu-appbar'
 							aria-haspopup='true'
 							color='inherit'
+							name='note'
 							onClick={handleOpen}
 						>
 							<AddCircleOutlineIcon />
+						</IconButton>
+						<IconButton
+							className={classes.addIcon}
+							aria-label='account of current user'
+							aria-controls='menu-appbar'
+							aria-haspopup='true'
+							color='inherit'
+							name='tag'
+							onClick={handleOpen}
+						>
+							<LabelIcon />
 						</IconButton>
 					</Toolbar>
 					<Toolbar className={classes.searchSection}>

@@ -47,8 +47,9 @@ def delete(user_id, note_id):
     db.commit()
     return 'sucess'
 
+
 @bp.route('/<user_id>/serach/<title>')
-def search_title(user_id,title):
+def search_title(user_id, title):
     db = get_db()
     notes = db.execute(
         'SELECT n.id,n.title,n.body FROM notes n,user u WHERE n.user=u.id AND u.id=? AND n.title=', (user_id)).fetchall()
