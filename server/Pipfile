@@ -8,6 +8,7 @@ flask = "*"
 pytest = "*"
 flask-cors = "*"
 coverage = "*"
+gunicorn = "*"
 
 [dev-packages]
 

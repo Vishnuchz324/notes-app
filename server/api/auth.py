@@ -34,7 +34,6 @@ def register():
         db.commit()
         user_id = db.execute(
             'SELECT id FROM user WHERE username=?', (username,)).fetchone()
-        print(user_id)
         return jsonify(user_id)
     return abort(400, error)
 

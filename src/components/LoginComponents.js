@@ -3,7 +3,7 @@ import { Redirect, Link } from "react-router-dom";
 import axios from "axios";
 import "./LoginComponents.css";
 
-export const SignUpComponent = ({ toggleView }) => {
+const SignUpComponent = ({ toggleView, handleAuth }) => {
 	const [userName, setuserName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -20,9 +20,7 @@ export const SignUpComponent = ({ toggleView }) => {
 				email: email,
 			},
 		})
-			.then((response) => {
-				<Redirect to='/sign-in' />;
-			})
+			.then((response) => {})
 			.catch((e) => console.log(e.response));
 	};
 	return (
@@ -76,16 +74,16 @@ export const SignUpComponent = ({ toggleView }) => {
 				</button>
 				<p>
 					i am already a member{" "}
-					<Link to='/signin'>
-						<a className='form_link'>sign in</a>
-					</Link>
+					<a onClick={toggleView} className='form_link'>
+						sign in
+					</a>
 				</p>
 			</form>
 		</div>
 	);
 };
 
-export const SignInComponent = ({ toggleView }) => {
+const SignInComponent = ({ toggleView, handleAuth }) => {
 	const [userName, setuserName] = useState("");
 	const [password, setPassword] = useState("");
 	const handleSubmit = async (event) => {
@@ -100,7 +98,9 @@ export const SignInComponent = ({ toggleView }) => {
 			},
 		})
 			.then((response) => {
-				<Redirect to='/home' />;
+				localStorage.setItem("userId", response.data);
+				localStorage.setItem("userName", userName);
+				handleAuth(response.data, userName);
 			})
 			.catch((e) => console.log(e.response));
 	};
@@ -143,11 +143,27 @@ export const SignInComponent = ({ toggleView }) => {
 				</button>
 				<p>
 					create and account{" "}
-					<Link to='/signup'>
-						<a className='form_link'>sign up</a>
-					</Link>
+					<a onClick={toggleView} className='form_link'>
+						sign up
+					</a>
 				</p>
 			</form>
 		</div>
 	);
 };
+
+export default function LoginComponent({ handleAuth }) {
+	const [isRegistered, setIsRegistered] = useState(false);
+	const toggleView = () => {
+		setIsRegistered(!isRegistered);
+	};
+	return (
+		<>
+			{!isRegistered ? (
+				<SignInComponent handleAuth={handleAuth} toggleView={toggleView} />
+			) : (
+				<SignUpComponent toggleView={toggleView} />
+			)}
+		</>
+	);
+}

@@ -69,15 +69,13 @@ const DialogActions = withStyles((theme) => ({
 	},
 }))(MuiDialogActions);
 
-export default function AddLabels({ open, handleClose }) {
+export default function AddLabels({ userID, open, handleClose }) {
 	const classes = useStyles();
 	const [tags, setTags] = useState("");
 	const [title, setTitle] = useState("");
-	const [userID, setuserID] = useState(1);
 	const [render, setRender] = useState(false);
 
 	const getData = async () => {
-		console.log("visited");
 		await axios
 			.get(`http://127.0.0.1:5000/tags/${userID}/get_tags`)
 			.then(function (response) {

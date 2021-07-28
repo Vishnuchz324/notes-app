@@ -5,11 +5,11 @@ import AddNotes from "./AddNotes";
 import AddLabels from "./AddLabels";
 import axios from "axios";
 
-function HomeComponent() {
+function HomeComponent({ userID, userName, handleLogout }) {
 	const [openNotes, setOpenNotes] = useState(false);
 	const [openTags, setOpenTags] = useState(false);
+	const [filter, setFilter] = useState(false);
 	const [notes, setNotes] = useState([]);
-	const [userID, setUserID] = useState(1);
 	const getData = async () => {
 		await axios
 			.get(`http://127.0.0.1:5000/notes/${userID}/get`)
@@ -17,14 +17,21 @@ function HomeComponent() {
 				setNotes(response.data);
 			});
 	};
+	const filterData = async (search) => {
+		await axios
+			.get(`http://127.0.0.1:5000/notes/${userID}/serach/${search}`)
+			.then(function (response) {
+				setNotes(response.data);
+			});
+	};
 
 	const handleSubmit = (search) => {
-		console.table(search);
+		search.length != 0 ? filterData(search) : getData();
+		setFilter(!filter);
 	};
 
 	const handleOpen = (event) => {
 		const name = event.currentTarget.name;
-
 		if (name === "note") {
 			setOpenNotes(true);
 		} else if (name == "tag") {
@@ -42,13 +49,20 @@ function HomeComponent() {
 		close();
 	};
 
+	useEffect(() => {}, [filter]);
+
 	useEffect(() => {
 		getData();
 	}, [openNotes, openTags]);
 
 	return (
 		<>
-			<NavBarComponent handleOpen={handleOpen} handleSubmit={handleSubmit} />
+			<NavBarComponent
+				handleOpen={handleOpen}
+				userName={userName}
+				handleSubmit={handleSubmit}
+				handleLogout={handleLogout}
+			/>
 			<NotesComponent
 				notes={notes}
 				userID={userID}
@@ -56,12 +70,14 @@ function HomeComponent() {
 			/>
 			<AddNotes
 				open={openNotes}
+				userID={userID}
 				handleClose={() => {
 					setOpenNotes(false);
 				}}
 			/>
 			<AddLabels
 				open={openTags}
+				userID={userID}
 				handleClose={() => {
 					setOpenTags(false);
 				}}

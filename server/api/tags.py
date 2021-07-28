@@ -31,7 +31,8 @@ def create(user_id):
     if not user:
         error = 'user does not exist'
     else:
-        title = db.execute('SELECT * FROM tags WHERE tag=?', (tag,)).fetchone()
+        title = db.execute(
+            'SELECT * FROM tags WHERE tag=? and user=?', (tag, user_id)).fetchone()
         if title:
             error = 'tag already exists'
         if error is None:

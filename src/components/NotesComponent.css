@@ -1,6 +1,7 @@
 .note {
 	display: flex;
 	width: 400px;
+	flex-direction: column;
 	background-color: rgba(255, 255, 0, 0.4);
 	padding: 0 5px;
 	justify-content: space-between;
@@ -14,15 +15,23 @@
 	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
 }
 
+.note-header {
+	display: flex;
+	margin-left: 10px;
+	flex-direction: row;
+	justify-content: space-between;
+}
 .note-icon {
 	margin: auto 0;
 	height: fit-content;
+	justify-content: flex-start;
 }
 .note-content {
 	display: flex;
 	flex-direction: column;
 	margin-left: 10px;
 	padding: 2px 0;
+	max-width: 200px;
 }
 .note-tags {
 	display: flex;

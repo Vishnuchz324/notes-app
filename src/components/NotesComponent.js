@@ -16,13 +16,10 @@ function NotesComponent({ notes, handleDelete, userID }) {
 	const [open, setOpen] = useState(false);
 	const [dialogProps, setDialogProps] = useState(null);
 
-
 	const promptDelete = (title, noteID) => {
 		setDialogProps({ title: title, noteID: noteID });
 		setOpen(true);
 	};
-
-
 
 	const handleClose = () => {
 		setOpen(false);
@@ -64,38 +61,61 @@ function NotesComponent({ notes, handleDelete, userID }) {
 		);
 	}
 
+	function Tags({ noteID }) {
+		const [tags, setTags] = useState([]);
+		const [loading, setLoading] = useState(true);
+		useEffect(async () => {
+			await axios
+				.get(`http://127.0.0.1:5000/notes/${userID}/get_notes_tags/${noteID}`)
+				.then(function (response) {
+					setTags(response.data);
+					setLoading(false);
+				});
+		}, [loading]);
+		return (
+			<div className='note-tags'>
+				{tags.map((tag) => {
+					return <p className='note-tags__tag'>{tag}</p>;
+				})}
+			</div>
+		);
+	}
+
 	function Note({ noteID, title, body }) {
+		const [visisble, setVisible] = useState(false);
 		if (title.length == 0) return <div></div>;
 		return (
 			<div className='note'>
-				<div className='note-content'>
+				<div className='note-header'>
 					<h4 className='note-title'>{title}</h4>
-					<div className='note-tags'>
-						<p className='note-tags__tag'>first</p>
-						<p className='note-tags__tag'>second</p>
-						<p className='note-tags__tag'>third</p>
+					<div className='note-icon'>
+						<IconButton
+							aria-label='account of current user'
+							aria-controls='menu-appbar'
+							aria-haspopup='true'
+							color='inherit'
+							onClick={() => {
+								setVisible(!visisble);
+							}}
+						>
+							<VisibilityIcon />
+						</IconButton>
+						<IconButton
+							aria-label='account of current user'
+							aria-controls='menu-appbar'
+							aria-haspopup='true'
+							color='inherit'
+							onClick={() => {
+								promptDelete(title, noteID);
+							}}
+						>
+							<DeleteOutlineIcon />
+						</IconButton>
 					</div>
 				</div>
-				<div className='note-icon'>
-					<IconButton
-						aria-label='account of current user'
-						aria-controls='menu-appbar'
-						aria-haspopup='true'
-						color='inherit'
-					>
-						<VisibilityIcon />
-					</IconButton>
-					<IconButton
-						aria-label='account of current user'
-						aria-controls='menu-appbar'
-						aria-haspopup='true'
-						color='inherit'
-						onClick={() => {
-							promptDelete(title, noteID);
-						}}
-					>
-						<DeleteOutlineIcon />
-					</IconButton>
+				<div className='note-content'>
+					<Tags noteID={noteID} />
+					{visisble && <p>{body}</p>}
 				</div>
 			</div>
 		);

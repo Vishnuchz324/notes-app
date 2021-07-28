@@ -11,9 +11,14 @@ import SearchIcon from "@material-ui/icons/Search";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { useState } from "react";
 
-export default function NavBarComponent({ handleOpen, handleSubmit }) {
-	const classes = useStyles();
+export default function NavBarComponent({
+	userName,
+	handleOpen,
+	handleSubmit,
+	handleLogout,
+}) {
 	const [search, setSearch] = useState("");
+	const classes = useStyles();
 	return (
 		<div className={classes.root}>
 			<AppBar position='static'>
@@ -48,7 +53,8 @@ export default function NavBarComponent({ handleOpen, handleSubmit }) {
 					<Toolbar className={classes.searchSection}>
 						<div className={classes.search}>
 							<InputBase
-								placeholder='Search…'
+								value={search}
+								placeholder='search by tags ....'
 								classes={{
 									root: classes.inputRoot,
 									input: classes.inputInput,
@@ -64,14 +70,16 @@ export default function NavBarComponent({ handleOpen, handleSubmit }) {
 							aria-controls='menu-appbar'
 							aria-haspopup='true'
 							color='inherit'
-							onclick={handleSubmit(search)}
+							onClick={(e) => {
+								handleSubmit(search);
+							}}
 						>
 							<SearchIcon />
 						</IconButton>
 					</Toolbar>
 					<Toolbar className={classes.profileSection}>
 						<Typography className={classes.username} variant='subtitle1' noWrap>
-							name
+							{userName}
 						</Typography>
 						<IconButton
 							aria-label='account of current user'
@@ -81,6 +89,7 @@ export default function NavBarComponent({ handleOpen, handleSubmit }) {
 						>
 							<AccountCircle />
 						</IconButton>
+						<button onClick={handleLogout}>clear</button>
 					</Toolbar>
 				</Toolbar>
 			</AppBar>
