@@ -9,13 +9,13 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
-    # data = request.get_json(force=True)
-    # username = data['userName']
-    # email = data['email']
-    # password = data['password']
-    username = request.form['userName']
-    email = request.form['email']
-    password = request.form['password']
+    data = request.get_json(force=True)
+    username = data['userName']
+    email = data['email']
+    password = data['password']
+    # username = request.form['userName']
+    # email = request.form['email']
+    # password = request.form['password']
     db = get_db()
     error = None
     if db.execute(

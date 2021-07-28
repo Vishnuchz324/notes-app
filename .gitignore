@@ -9,6 +9,7 @@
 /instance
 __pycache__
 *.pyc
+.pytest*
 
 # testing
 /coverage

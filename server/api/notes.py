@@ -8,12 +8,11 @@ bp = Blueprint('notes', __name__, url_prefix='/notes')
 
 
 @bp.route('/<user_id>/create', methods=['POST'])
-def register(user_id):
-    # data = request.get_json(force=True)
-    # title = data['title']
-    # body = data['body']
-    title = request.form['title']
-    body = request.form['body']
+def create(user_id):
+    data = request.get_json(force=True)
+    print(data)
+    title = data['title']
+    body = data['body']
     db = get_db()
     error = None
     if db.execute(
@@ -30,7 +29,27 @@ def register(user_id):
                    (title, body, user_id)
                    )
         db.commit()
-        notes = db.execute(
-            'SELECT n.title FROM notes n,user u WHERE n.user=u.id AND u.id=?', (user_id,)).fetchall()
-        return jsonify(notes)
     return abort(400, error)
+
+
+@bp.route('/<user_id>/get')
+def get_all_notes(user_id):
+    db = get_db()
+    notes = db.execute(
+        'SELECT n.id,n.title,n.body FROM notes n,user u WHERE n.user=u.id AND u.id=? ', (user_id)).fetchall()
+    return jsonify(notes)
+
+
+@bp.route('/<user_id>/delete/<note_id>')
+def delete(user_id, note_id):
+    db = get_db()
+    db.execute('DELETE FROM notes WHERE id=? AND user=?', (note_id, user_id))
+    db.commit()
+    return 'sucess'
+
+@bp.route('/<user_id>/serach/<title>')
+def search_title(user_id,title):
+    db = get_db()
+    notes = db.execute(
+        'SELECT n.id,n.title,n.body FROM notes n,user u WHERE n.user=u.id AND u.id=? AND n.title=', (user_id)).fetchall()
+    return jsonify(notes)
