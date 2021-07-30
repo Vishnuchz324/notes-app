@@ -89,7 +89,9 @@ export default function NavBarComponent({
 						>
 							<AccountCircle />
 						</IconButton>
-						<button onClick={handleLogout}>clear</button>
+						<button className={classes.logout} onClick={handleLogout}>
+							Log Out
+						</button>
 					</Toolbar>
 				</Toolbar>
 			</AppBar>
@@ -167,5 +169,14 @@ const useStyles = makeStyles((theme) => ({
 		[theme.breakpoints.up("sm")]: {
 			display: "block",
 		},
+	},
+	// button
+	logout: {
+		backgroundColor: "red",
+		border: "none",
+		borderRadius: "5px",
+		padding: "8px 10px",
+		color: "white",
+		outline: "none",
 	},
 }));

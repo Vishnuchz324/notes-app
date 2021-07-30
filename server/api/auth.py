@@ -13,19 +13,16 @@ def register():
     username = data['userName']
     email = data['email']
     password = data['password']
-    # username = request.form['userName']
-    # email = request.form['email']
-    # password = request.form['password']
     db = get_db()
     error = None
     if db.execute(
         'SELECT id FROM user WHERE username = ?', (username,)
     ).fetchone() is not None:
-        error = f"User {username} already registered"
+        error = f"user {username} already registered"
     elif db.execute(
         'SELECT id FROM user WHERE email = ?', (email,)
     ).fetchone() is not None:
-        error = "The email id is already registered with a user"
+        error = "The email id is already registered"
 
     if error is None:
         db.execute('INSERT INTO user (username,email,password) VALUES(?,?,?)',
@@ -35,7 +32,7 @@ def register():
         user_id = db.execute(
             'SELECT id FROM user WHERE username=?', (username,)).fetchone()
         return jsonify(user_id)
-    return abort(400, error)
+    return jsonify(error), 500
 
 
 @bp.route('/login', methods=['GET', 'POST'])
@@ -49,11 +46,12 @@ def login():
         'SELECT id,username,password FROM user WHERE username = ? ', (
             username,)
     ).fetchone()
-    user_id, user_name, user_password = user
     if user is None:
         error = 'username not registered'
-    elif not check_password_hash(user_password, password):
-        error = 'incorrect password'
-    if error is None:
-        return jsonify(user_id)
-    return abort(400, error)
+    else:
+        user_id, user_name, user_password = user
+        if not check_password_hash(user_password, password):
+            error = 'incorrect password'
+        elif error is None:
+            return jsonify(user_id)
+    return jsonify(error), 500

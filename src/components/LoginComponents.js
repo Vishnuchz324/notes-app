@@ -3,6 +3,15 @@ import { Redirect, Link } from "react-router-dom";
 import axios from "axios";
 import "./LoginComponents.css";
 
+const Alert = ({ error }) => {
+	const style = {
+		font: "small",
+		color: "red",
+	};
+	console.log(error);
+	return <>{error && <p style={style}>{error}</p>}</>;
+};
+
 const SignUpComponent = ({ toggleView, handleAuth }) => {
 	const [userName, setuserName] = useState("");
 	const [email, setEmail] = useState("");
@@ -20,9 +29,15 @@ const SignUpComponent = ({ toggleView, handleAuth }) => {
 				email: email,
 			},
 		})
-			.then((response) => {})
-			.catch((e) => console.log(e.response));
+			.then((response) => {
+				setErrors(null);
+				toggleView();
+			})
+			.catch((e) => {
+				setErrors(e.response.data);
+			});
 	};
+
 	return (
 		<div className='login_page'>
 			<form className='form'>
@@ -69,6 +84,7 @@ const SignUpComponent = ({ toggleView, handleAuth }) => {
 					}}
 					required
 				/>
+				<Alert error={errors} />
 				<button className='form_button' onClick={handleSubmit}>
 					Sign Up
 				</button>
@@ -86,8 +102,11 @@ const SignUpComponent = ({ toggleView, handleAuth }) => {
 const SignInComponent = ({ toggleView, handleAuth }) => {
 	const [userName, setuserName] = useState("");
 	const [password, setPassword] = useState("");
+	const [errors, setErrors] = useState("");
+
 	const handleSubmit = async (event) => {
 		event.preventDefault();
+
 		await axios({
 			method: "POST",
 			headers: { "content-type": "application/json" },
@@ -101,8 +120,12 @@ const SignInComponent = ({ toggleView, handleAuth }) => {
 				localStorage.setItem("userId", response.data);
 				localStorage.setItem("userName", userName);
 				handleAuth(response.data, userName);
+				setErrors(null);
 			})
-			.catch((e) => console.log(e.response));
+			.catch((e) => {
+				console.log(errors);
+				setErrors(e.response);
+			});
 	};
 	return (
 		<div className='login_page'>
@@ -134,11 +157,8 @@ const SignInComponent = ({ toggleView, handleAuth }) => {
 						setPassword(event.target.value);
 					}}
 				/>
-				<button
-					className='form_button'
-					className='form_button'
-					onClick={handleSubmit}
-				>
+				<Alert error={errors} />
+				<button className='form_button' onClick={handleSubmit}>
 					Sign In
 				</button>
 				<p>

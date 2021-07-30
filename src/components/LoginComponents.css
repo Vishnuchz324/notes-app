@@ -80,3 +80,10 @@
 	color: white;
 	outline: none;
 }
+.form_button:active {
+	box-shadow: 7px 6px 28px 1px rgba(0, 0, 0, 0.24);
+	transform: translateY(4px);
+}
+.form_button:disabled {
+	background-color: rgb(152, 161, 152);
+}
